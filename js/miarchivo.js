@@ -50,6 +50,11 @@ function agregarAlCarrito(idArticulo){
     
 }
 
+function isArticleInCart(idArticulo){
+    if (!idArticulo) return;
+    return carritoDeCompras.some(articulo => articulo.id === idArticulo);
+}
+
 function cargarArticulos(){
 
     fetch(jsonArticulosPath)
@@ -67,7 +72,7 @@ function cargarArticulos(){
                 if(articulo.stock <= 0) continue;
                 if(!articulo.descripcion) articulo.descripcion = "";
 
-                mainShop.innerHTML += `<div class="article">
+                mainShop.innerHTML += `<div class="article (isArticleInCart(articulo.id)) ? 'in_cart': '' ">
                                             <div class="article__image">
                                                 <img src="${articulo.img}" class="article_image_img" />
                                             </div>
@@ -78,8 +83,13 @@ function cargarArticulos(){
                                             <div class="article__description">
                                                 <p>${articulo.descripcion}</p>
                                             </div>
-                                            <button class="article__button" onclick="agregarAlCarrito(${articulo.id})">Agregar al carrito</button>
+                                            <div id="article__button" class="article__button" onclick="agregarAlCarrito(${articulo.id})">
+                                                <p>Agregar al carrito</p>
+                                            </div>
                                         </div>`;
+
+                //const articleButton = document.getElementById('article__button');
+                //articleButton.innerHTML += "<div class='article__button_carrito'>0</div>";
             }
             
         })

@@ -173,6 +173,10 @@ nav {
     align-items: center;
 }
 
+.in_cart{
+    border: 2px solid black;
+}
+
 .article__image img{
     width: 180px;
     height: 110px;
@@ -221,9 +225,18 @@ nav {
     padding: 5px;
     background-color: rgb(92, 255, 160);
     border-radius: 0 0 5px 5px;
+    display: flex;
+    justify-content: space-evenly;
+    font-size: 12px;
 }
 
-
+.article__button_carrito{
+    width: 15px;
+    height: 15px;
+    background-color: #c4c4c4;
+    border-radius: 50%;
+    font-size: 10px;
+}
 
 .carrito {
     display: none;
