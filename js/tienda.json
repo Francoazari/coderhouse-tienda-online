@@ -1,5 +1,21 @@
 {
-  "articulos":[
+    "menu":[
+        {
+            "id": 0,
+            "label": "Articulos"
+        },
+        {
+            "id": 1,
+            "label": "Carrtio de compras"
+        },
+        {
+            "id": 2,
+            "label": "Area de empleados",
+            "password": "1234"
+        }
+        
+    ],
+    "articulos":[
     {
         "id": 1, 
         "nombre": "Agua",

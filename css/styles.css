@@ -43,23 +43,27 @@ body {
     flex-direction: row;
 }
 
-nav {
+#nav {
     border-right: 1px solid #c9c9c9;
     width: 25%;
 }
 
-.nav ul {
+#nav ul {
     display: flex;
     flex-direction: column;
     padding-inline-start: 0px;
 }
 
-.nav li {
+#nav li {
     list-style: none;
-    padding: 5px 5px 0 5px;
-    margin: 5px 5px 0 5px;
+    padding: 4px 5px 4px 5px;
     cursor:pointer;
     font-size: 14px;
+    border-bottom: 1px solid #d6d6d6;
+}
+
+#nav li:hover, #nav li.active {
+    background-color: #c4c4c4;
 }
 
 #main_shop{

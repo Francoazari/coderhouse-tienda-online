@@ -1,7 +1,104 @@
-let jsonArticulos = {};
-const jsonArticulosPath = "./js/articulos.json";
+let jsonTienda = {};
+const jsonTiendaPath = "./js/tienda.json";
 
 let carritoDeCompras = [];
+
+function menuOptions(idMenu) {
+    if(!idMenu) return;
+
+    setActiveItemMenu(idMenu);
+
+    switch(idMenu) {
+        case "option0":
+            tiendaOnline();
+            break;
+        case "option1":
+            carrito();
+            break;
+    }
+
+}
+
+function setActiveItemMenu(idMenu){
+
+    const menuItems = document.getElementsByClassName("menu-item");
+
+    for(menuItem of menuItems){
+        console.log();
+        if(menuItem.classList.contains("active") && menuItem.id !== idMenu){
+            menuItem.classList.remove("active");
+        }else if(!menuItem.classList.contains("active") && menuItem.id === idMenu){
+            menuItem.classList.add("active");        
+        }
+    }
+}
+
+
+window.onload = function() { // también puede usar window.addEventListener('load', (event) => {
+    
+
+    
+
+    fetch(jsonTiendaPath)
+        .then(Response => Response.json())
+        .then(data => {
+
+            jsonTienda = data;
+
+            if(jsonTienda["menu"].length > 0){
+                
+                const menu = document.getElementById('nav');
+                const ulMenu = document.createElement('ul');
+
+                for (itemMenu of jsonTienda["menu"]) {
+                    (function () {
+                        const liMenu = document.createElement('li');
+                        liMenu.setAttribute("id","option" + itemMenu.id);
+                        liMenu.classList.add("menu-item");
+                        liMenu.innerHTML = itemMenu.label;
+                        liMenu.addEventListener("click", () => menuOptions(liMenu.getAttribute("id")));
+                        ulMenu.appendChild(liMenu);
+                    }())
+                    
+                }
+                menu.appendChild(ulMenu);
+            }
+            
+
+
+            const mainShop = document.getElementById('main_shop__articles');
+            mainShop.innerHTML = '';
+
+            for (const articulo of jsonTienda["articulos"]) {
+
+                if(!articulo) continue;
+                if(articulo.stock <= 0) continue;
+                if(!articulo.descripcion) articulo.descripcion = "";
+
+                mainShop.innerHTML += `<div class="article">
+                                            <div class="article__image">
+                                                <img src="${articulo.img}" class="article_image_img" />
+                                            </div>
+                                            <div class="article__name">
+                                                <p>${articulo.nombre}</p>
+                                                <div>$${articulo.precio}</div>
+                                            </div>
+                                            <div class="article__description">
+                                                <p>${articulo.descripcion}</p>
+                                            </div>
+                                            <button class="article__button" onclick="agregarAlCarrito(${articulo.id})">Agregar al carrito</button>
+                                        </div>`;
+            }
+
+
+            
+        })
+
+
+
+};
+
+
 
 
 function agregarAlCarrito(idArticulo){
@@ -11,7 +108,7 @@ function agregarAlCarrito(idArticulo){
         carritoDeCompras = JSON.parse(localStorage.getItem("carritoDeCompras"));
     }
 
-    let articuloElegido = jsonArticulos["articulos"].find(articulo => articulo.id === idArticulo);
+    let articuloElegido = jsonTienda["articulos"].find(articulo => articulo.id === idArticulo);
 
     if(articuloElegido){
         if(articuloElegido.stock > 0){
@@ -50,42 +147,6 @@ function agregarAlCarrito(idArticulo){
     
 }
 
-function cargarArticulos(){
-
-    fetch(jsonArticulosPath)
-        .then(Response => Response.json())
-        .then(data => {
-
-            jsonArticulos = data;
-
-            const mainShop = document.getElementById('main_shop__articles');
-            mainShop.innerHTML = '';
-
-            for (const articulo of jsonArticulos["articulos"]) {
-
-                if(!articulo) continue;
-                if(articulo.stock <= 0) continue;
-                if(!articulo.descripcion) articulo.descripcion = "";
-
-                mainShop.innerHTML += `<div class="article">
-                                            <div class="article__image">
-                                                <img src="${articulo.img}" class="article_image_img" />
-                                            </div>
-                                            <div class="article__name">
-                                                <p>${articulo.nombre}</p>
-                                                <div>$${articulo.precio}</div>
-                                            </div>
-                                            <div class="article__description">
-                                                <p>${articulo.descripcion}</p>
-                                            </div>
-                                            <button class="article__button" onclick="agregarAlCarrito(${articulo.id})">Agregar al carrito</button>
-                                        </div>`;
-            }
-            
-        })
-
-    
-}
 
 function tiendaOnline(){
 
@@ -103,7 +164,7 @@ function tiendaOnline(){
 
 function getImagenArticulo(idArticulo){
     if(!idArticulo) return;
-    return jsonArticulos.articulos.find(articulo => articulo.id === idArticulo).img;
+    return jsonTienda.articulos.find(articulo => articulo.id === idArticulo).img;
 }
 
 function eliminarArticuloCarrito(idArticulo) {
@@ -112,7 +173,7 @@ function eliminarArticuloCarrito(idArticulo) {
     let articuloCarrito = carritoDeCompras.find(articulo => articulo.id === idArticulo);
     if(!articuloCarrito) return;
 
-    jsonArticulos.articulos.find(articulo => articulo.id === idArticulo).stock += articuloCarrito.cantidad;
+    jsonTienda.articulos.find(articulo => articulo.id === idArticulo).stock += articuloCarrito.cantidad;
 
     carritoDeCompras.splice(carritoDeCompras.findIndex(articulo => articulo.id === idArticulo), 1)
     //carritoDeCompras.remove(articulo => articulo.id === idArticulo);
