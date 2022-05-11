@@ -16,7 +16,6 @@ function menuOptions(idMenu) {
             carrito();
             break;
     }
-
 }
 
 function setActiveItemMenu(idMenu){
@@ -33,12 +32,8 @@ function setActiveItemMenu(idMenu){
     }
 }
 
-
-window.onload = function() { // también puede usar window.addEventListener('load', (event) => {
+window.onload = function() {
     
-
-    
-
     fetch(jsonTiendaPath)
         .then(Response => Response.json())
         .then(data => {
@@ -64,8 +59,6 @@ window.onload = function() { // también puede usar window.addEventListener('loa
                 menu.appendChild(ulMenu);
             }
             
-
-
             const mainShop = document.getElementById('main_shop__articles');
             mainShop.innerHTML = '';
 
@@ -75,34 +68,47 @@ window.onload = function() { // también puede usar window.addEventListener('loa
                 if(articulo.stock <= 0) continue;
                 if(!articulo.descripcion) articulo.descripcion = "";
 
-                mainShop.innerHTML += `<div class="article">
-                                            <div class="article__image">
-                                                <img src="${articulo.img}" class="article_image_img" />
-                                            </div>
-                                            <div class="article__name">
-                                                <p>${articulo.nombre}</p>
-                                                <div>$${articulo.precio}</div>
-                                            </div>
-                                            <div class="article__description">
-                                                <p>${articulo.descripcion}</p>
-                                            </div>
-                                            <button class="article__button" onclick="agregarAlCarrito(${articulo.id})">Agregar al carrito</button>
-                                        </div>`;
+                const article = document.createElement('div');
+                article.classList.add('article');
+
+                const articleImage = document.createElement('div');
+                articleImage.classList.add('article__image');
+                const imageArticle = document.createElement('img');
+                imageArticle.classList.add('article_image_img');
+                imageArticle.src = articulo.img;
+                articleImage.appendChild(imageArticle);
+
+                const articleName = document.createElement('div');
+                articleName.classList.add('article__name');
+                const nameArticle = document.createElement('p');
+                nameArticle.innerHTML = articulo.nombre;
+                const precioArticle = document.createElement('div');
+                precioArticle.innerHTML = `$${articulo.precio}`;
+                articleName.appendChild(nameArticle);
+                articleName.appendChild(precioArticle);
+
+                const articleDescription = document.createElement('div');
+                articleDescription.classList.add('article__description');
+                const descriptionArticle = document.createElement('p');
+                descriptionArticle.innerHTML = articulo.descripcion;
+                articleDescription.appendChild(descriptionArticle);
+
+                const articleButton = document.createElement('button');
+                articleButton.classList.add('article__button');
+                articleButton.innerHTML = "Agregar al carrito";
+                articleButton.addEventListener("click", () => agregarAlCarrito(articulo.id));
+
+                article.appendChild(articleImage);
+                article.appendChild(articleName);
+                article.appendChild(articleDescription);
+                article.appendChild(articleButton);
+
+                mainShop.appendChild(article);
             }
-
-
-            
         })
-
-
-
 };
 
-
-
-
 function agregarAlCarrito(idArticulo){
-
 
     if(localStorage.getItem("carritoDeCompras")) {
         carritoDeCompras = JSON.parse(localStorage.getItem("carritoDeCompras"));
@@ -175,8 +181,7 @@ function eliminarArticuloCarrito(idArticulo) {
 
     jsonTienda.articulos.find(articulo => articulo.id === idArticulo).stock += articuloCarrito.cantidad;
 
-    carritoDeCompras.splice(carritoDeCompras.findIndex(articulo => articulo.id === idArticulo), 1)
-    //carritoDeCompras.remove(articulo => articulo.id === idArticulo);
+    carritoDeCompras.splice(carritoDeCompras.findIndex(articulo => articulo.id === idArticulo), 1);
     localStorage.setItem("carritoDeCompras", JSON.stringify(carritoDeCompras));
     carrito();
 }
@@ -209,17 +214,48 @@ function carrito(){
         }
         carritoArticulos.innerHTML = "";
         for (const articulo of carritoDeCompras) {
-            carritoArticulos.innerHTML += `<div class="carrito__articulo carrito_flex">                                                
-                                                <div class="carrito__articulo_image">
-                                                    <img src="` + getImagenArticulo(articulo.id) + `" class="carrito__articulo_imagen">
-                                                </div>
-                                                <div class="carrito__articulo_articulo">${articulo.nombre}</div>
-                                                <div class="carrito__articulo_cantidad">${articulo.cantidad}</div>
-                                                <div class="carrito__articulo_precio_unitario">$${articulo.precioPorUnidad}</div>
-                                                <div class="carrito__articulo_subtotal">$${articulo.subtotal}</div>
-                                                <div class="carrito__articulo_eliminar" onclick="eliminarArticuloCarrito(${articulo.id})">X</div>
-                                            </div>`;
+
+            const carritoArticulo = document.createElement('div');
+            carritoArticulo.classList.add('carrito__articulo', 'carrito_flex');
+
+            const carritoArticuloImage = document.createElement('div');
+            carritoArticuloImage.classList.add('carrito__articulo_image');
+            const carritoArticuloImagen = document.createElement('img');
+            carritoArticuloImagen.classList.add('carrito__articulo_imagen');
+            carritoArticuloImagen.src = getImagenArticulo(articulo.id);
+            carritoArticuloImage.appendChild(carritoArticuloImagen);
+
+            const carritoArticuloNombre = document.createElement('div');
+            carritoArticuloNombre.classList.add('carrito__articulo_articulo');
+            carritoArticuloNombre.innerHTML = articulo.nombre;
+
+            const carritoArticuloCantidad = document.createElement('div');
+            carritoArticuloCantidad.classList.add('carrito__articulo_cantidad');
+            carritoArticuloCantidad.innerHTML = articulo.cantidad;
+
+            const carritoArticuloPrecioUnitario = document.createElement('div');
+            carritoArticuloPrecioUnitario.classList.add('carrito__articulo_precio_unitario');
+            carritoArticuloPrecioUnitario.innerHTML = articulo.precioPorUnidad;
+
+            const carritoArticuloSubtotal = document.createElement('div');
+            carritoArticuloSubtotal.classList.add('carrito__articulo_subtotal');
+            carritoArticuloSubtotal.innerHTML = `$${articulo.subtotal}`;
+
+            const carritoArticuloEliminar = document.createElement('div');
+            carritoArticuloEliminar.classList.add('carrito__articulo_eliminar');
+            carritoArticuloEliminar.innerHTML = `X`;
+            carritoArticuloEliminar.addEventListener("click", () => eliminarArticuloCarrito(articulo.id));
+
+            carritoArticulo.appendChild(carritoArticuloImage);
+            carritoArticulo.appendChild(carritoArticuloNombre);
+            carritoArticulo.appendChild(carritoArticuloCantidad);
+            carritoArticulo.appendChild(carritoArticuloPrecioUnitario);
+            carritoArticulo.appendChild(carritoArticuloSubtotal);
+            carritoArticulo.appendChild(carritoArticuloEliminar);
+
+            carritoArticulos.appendChild(carritoArticulo);
         }
+
     }else if(carritoDeCompras.length === 0){
 
         carritoArticulos.innerHTML = "";
@@ -239,9 +275,4 @@ function carrito(){
     let totalAcum = 0;
     totalAcum = carritoDeCompras.reduce((totalAcum, articulo) => totalAcum + articulo.subtotal, totalAcum);
     total.innerHTML = "$" + totalAcum;
-
-
-
-
-
 }
