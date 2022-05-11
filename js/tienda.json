@@ -2,7 +2,8 @@
     "menu":[
         {
             "id": 0,
-            "label": "Articulos"
+            "label": "Articulos",
+            "default": true
         },
         {
             "id": 1,

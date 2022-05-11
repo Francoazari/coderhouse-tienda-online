@@ -151,12 +151,28 @@ body {
 }
 
 .carrito__articulo_eliminar{
+    background-color: rgb(255, 62, 62);
     width: 5%;
-    color: red;
+    height: auto;
+    color: white;
+    cursor:pointer;
+    border-radius: 5px;
+}
+
+.carrito__articulo_eliminar:hover{
+    background-color: rgb(255, 102, 102);
 }
 
 .carrito_info {
     justify-content: space-between;
+}
+
+.carrito__cantidad_articulos,
+.carrito__total{
+    background-color: #a7a7a7;
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 15px;
 }
 
 .carrito__cantidad_articulos div, 
@@ -223,11 +239,15 @@ body {
 .article__button{
     width: 100%;
     padding: 5px;
-    background-color: rgb(92, 255, 160);
+    font-size: 11px;
+    background-color: #5cffa0;
     border-radius: 0 0 5px 5px;
+    cursor: pointer;
 }
 
-
+.article__button:hover {
+    background-color: #95ffc1;
+}
 
 .carrito {
     display: none;
@@ -247,6 +267,10 @@ body {
 .carrito__articulo{
     display: flex;
     flex-direction: row;
+}
+
+.carrito__articulo:hover {
+    background-color: #d1d1d1;
 }
 
 .carrito_info{

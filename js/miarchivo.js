@@ -50,6 +50,9 @@ window.onload = function() {
                         const liMenu = document.createElement('li');
                         liMenu.setAttribute("id","option" + itemMenu.id);
                         liMenu.classList.add("menu-item");
+                        if (itemMenu.default) {
+                            liMenu.classList.add("active");
+                        } 
                         liMenu.innerHTML = itemMenu.label;
                         liMenu.addEventListener("click", () => menuOptions(liMenu.getAttribute("id")));
                         ulMenu.appendChild(liMenu);
@@ -95,7 +98,7 @@ window.onload = function() {
 
                 const articleButton = document.createElement('button');
                 articleButton.classList.add('article__button');
-                articleButton.innerHTML = "Agregar al carrito";
+                articleButton.innerHTML = "AGREGAR AL CARRITO";
                 articleButton.addEventListener("click", () => agregarAlCarrito(articulo.id));
 
                 article.appendChild(articleImage);
