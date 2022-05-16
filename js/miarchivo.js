@@ -1,7 +1,26 @@
-let jsonTienda = {};
 const jsonTiendaPath = "./js/tienda.json";
 
 let carritoDeCompras = [];
+
+let articulosJson;
+let menuJson;
+
+window.onload = function() {
+
+    getCarritoFromLocalStorage();
+    
+    fetch(jsonTiendaPath)
+        .then(Response => Response.json())
+        .then(data => {
+
+            menuJson = data["menu"];
+            articulosJson = data["articulos"];
+
+            mostrarMenu(menuJson);
+            actualizarStock(articulosJson);
+            mostrarProductos(articulosJson, true)
+        })
+};
 
 function menuOptions(idMenu) {
     if(!idMenu) return;
@@ -10,9 +29,10 @@ function menuOptions(idMenu) {
 
     switch(idMenu) {
         case "option0":
-            tiendaOnline();
+            mostrarTiendaOnline();
             break;
         case "option1":
+            mostrarCarrito();
             carrito();
             break;
     }
@@ -32,92 +52,123 @@ function setActiveItemMenu(idMenu){
     }
 }
 
-window.onload = function() {
-    
-    fetch(jsonTiendaPath)
-        .then(Response => Response.json())
-        .then(data => {
+function getCarritoFromLocalStorage(){
+    if(localStorage.getItem("carritoDeCompras")){
+        carritoDeCompras = JSON.parse(localStorage.getItem("carritoDeCompras"));
+    }
+}
 
-            jsonTienda = data;
+function mostrarProductos(articulos = articulosJson, soloDisponibles = true){
 
-            if(jsonTienda["menu"].length > 0){
-                
-                const menu = document.getElementById('nav');
-                const ulMenu = document.createElement('ul');
+    const mainShop = document.getElementById('main_shop__articles');
+    mainShop.innerHTML = '';
 
-                for (itemMenu of jsonTienda["menu"]) {
-                    (function () {
-                        const liMenu = document.createElement('li');
-                        liMenu.setAttribute("id","option" + itemMenu.id);
-                        liMenu.classList.add("menu-item");
-                        if (itemMenu.default) {
-                            liMenu.classList.add("active");
-                        } 
-                        liMenu.innerHTML = itemMenu.label;
-                        liMenu.addEventListener("click", () => menuOptions(liMenu.getAttribute("id")));
-                        ulMenu.appendChild(liMenu);
-                    }())
-                    
-                }
-                menu.appendChild(ulMenu);
-            }
+    for (const articulo of articulos) {
+
+        if(!articulo) continue;
+        //if(soloDisponibles && articulo.stock <= 0) continue;
+        if(!articulo.descripcion) articulo.descripcion = "";
+
+        const articleInCart = document.createElement('div');
+
+        const article = document.createElement('div');
+        article.classList.add('article');
+
+        const articleImage = document.createElement('div');
+        articleImage.classList.add('article__image');
+        const imageArticle = document.createElement('img');
+        imageArticle.classList.add('article_image_img');
+        imageArticle.src = articulo.img;
+        articleImage.appendChild(imageArticle);
+
+        const articleName = document.createElement('div');
+        articleName.classList.add('article__name');
+        const nameArticle = document.createElement('p');
+        nameArticle.innerHTML = articulo.nombre;
+        const precioArticle = document.createElement('div');
+        precioArticle.innerHTML = `$${articulo.precio}`;
+        articleName.appendChild(nameArticle);
+        articleName.appendChild(precioArticle);
+
+        const articleDescription = document.createElement('div');
+        articleDescription.classList.add('article__description');
+        const descriptionArticle = document.createElement('p');
+        descriptionArticle.innerHTML = articulo.descripcion;
+        articleDescription.appendChild(descriptionArticle);
+
+        const articleButton = document.createElement('button');
+        articleButton.innerHTML = (articulo.stock > 0) ? "AGREGAR AL CARRITO": "SIN STOCK";
+        articleButton.classList.add('article__button');
+        if(articulo.stock > 0){
+            articleButton.classList.add('con-stock');
+            articleButton.addEventListener("click", () => agregarAlCarrito(articulo.id));
+        }else{
+            articleButton.classList.add('sin-stock');
+        }
+
+        article.appendChild(articleImage);
+        article.appendChild(articleName);
+        article.appendChild(articleDescription);
+        article.appendChild(articleButton);
+
+        if(isArticleInCart(articulo.id)){
             
-            const mainShop = document.getElementById('main_shop__articles');
-            mainShop.innerHTML = '';
+            articleInCart.classList.add('in-cart');
+            const articleInCartP = document.createElement('p');
+            articleInCartP.innerHTML = "IN CART";
+            articleInCart.appendChild(articleInCartP);
+            
+        }
+        
+        articleInCart.appendChild(article);
+        mainShop.appendChild(articleInCart);
+    }
 
-            for (const articulo of jsonTienda["articulos"]) {
+}
 
-                if(!articulo) continue;
-                if(articulo.stock <= 0) continue;
-                if(!articulo.descripcion) articulo.descripcion = "";
+function mostrarMenu(menuItems){
 
-                const article = document.createElement('div');
-                article.classList.add('article');
+    if(menuItems.length > 0){
+        const menu = document.getElementById('nav');
+        const ulMenu = document.createElement('ul');
 
-                const articleImage = document.createElement('div');
-                articleImage.classList.add('article__image');
-                const imageArticle = document.createElement('img');
-                imageArticle.classList.add('article_image_img');
-                imageArticle.src = articulo.img;
-                articleImage.appendChild(imageArticle);
+        for (menuItem of menuItems) {
+            (function () {
+                const liMenu = document.createElement('li');
+                liMenu.setAttribute("id","option" + menuItem.id);
+                liMenu.classList.add("menu-item");
+                if (menuItem.default) {
+                    liMenu.classList.add("active");
+                } 
+                liMenu.innerHTML = menuItem.label;
+                liMenu.addEventListener("click", () => menuOptions(liMenu.getAttribute("id")));
+                ulMenu.appendChild(liMenu);
+            }())
+            
+        }
+        menu.appendChild(ulMenu);
+    }
+}
 
-                const articleName = document.createElement('div');
-                articleName.classList.add('article__name');
-                const nameArticle = document.createElement('p');
-                nameArticle.innerHTML = articulo.nombre;
-                const precioArticle = document.createElement('div');
-                precioArticle.innerHTML = `$${articulo.precio}`;
-                articleName.appendChild(nameArticle);
-                articleName.appendChild(precioArticle);
+function actualizarStock(articulos) {
+    
+    if(!articulos) return;
+    console.log(articulos);
+    for(articulo of articulos){
+        const articuloCarritoEncontrado = carritoDeCompras.find(articuloCarrito => articuloCarrito.id === articulo.id);
+        if(!articuloCarritoEncontrado) continue;
+        articulo.stock -= articuloCarritoEncontrado.cantidad;
+    }
+    console.log(articulos);
+}
 
-                const articleDescription = document.createElement('div');
-                articleDescription.classList.add('article__description');
-                const descriptionArticle = document.createElement('p');
-                descriptionArticle.innerHTML = articulo.descripcion;
-                articleDescription.appendChild(descriptionArticle);
-
-                const articleButton = document.createElement('button');
-                articleButton.classList.add('article__button');
-                articleButton.innerHTML = "AGREGAR AL CARRITO";
-                articleButton.addEventListener("click", () => agregarAlCarrito(articulo.id));
-
-                article.appendChild(articleImage);
-                article.appendChild(articleName);
-                article.appendChild(articleDescription);
-                article.appendChild(articleButton);
-
-                mainShop.appendChild(article);
-            }
-        })
-};
+function isArticleInCart(idArticle) {
+    return carritoDeCompras.some(articulo => articulo.id === idArticle);
+}
 
 function agregarAlCarrito(idArticulo){
 
-    if(localStorage.getItem("carritoDeCompras")) {
-        carritoDeCompras = JSON.parse(localStorage.getItem("carritoDeCompras"));
-    }
-
-    let articuloElegido = jsonTienda["articulos"].find(articulo => articulo.id === idArticulo);
+    let articuloElegido = articulosJson.find(articulo => articulo.id === idArticulo);
 
     if(articuloElegido){
         if(articuloElegido.stock > 0){
@@ -131,7 +182,6 @@ function agregarAlCarrito(idArticulo){
                 articuloEnCarrito.subtotal += articuloElegido.precio;
 
             }else{
-
                 carritoDeCompras.push({
                     "id": articuloElegido.id,
                     "nombre": articuloElegido.nombre,
@@ -139,10 +189,10 @@ function agregarAlCarrito(idArticulo){
                     "precioPorUnidad": articuloElegido.precio, 
                     "subtotal": articuloElegido.precio 
                 });
-
             }
 
             localStorage.setItem("carritoDeCompras", JSON.stringify(carritoDeCompras));
+            mostrarProductos();
 
             console.clear();
             console.table(carritoDeCompras);
@@ -157,7 +207,7 @@ function agregarAlCarrito(idArticulo){
 }
 
 
-function tiendaOnline(){
+function mostrarTiendaOnline(){
 
     let articulos = document.getElementById("main_shop__articles");
     if(articulos.classList.contains('hidden')){
@@ -171,9 +221,21 @@ function tiendaOnline(){
 
 }
 
+function mostrarCarrito(){
+    let carrito = document.getElementById("carrito");
+    if(carrito.classList.contains('hidden')){
+        carrito.classList.remove('hidden');
+    }
+    
+    let articulos = document.getElementById("main_shop__articles");
+    if(!articulos.classList.contains('hidden')){
+        articulos.classList.add('hidden');
+    }
+}
+
 function getImagenArticulo(idArticulo){
     if(!idArticulo) return;
-    return jsonTienda.articulos.find(articulo => articulo.id === idArticulo).img;
+    return articulosJson.find(articulo => articulo.id === idArticulo).img;
 }
 
 function eliminarArticuloCarrito(idArticulo) {
@@ -182,11 +244,12 @@ function eliminarArticuloCarrito(idArticulo) {
     let articuloCarrito = carritoDeCompras.find(articulo => articulo.id === idArticulo);
     if(!articuloCarrito) return;
 
-    jsonTienda.articulos.find(articulo => articulo.id === idArticulo).stock += articuloCarrito.cantidad;
+    articulosJson.find(articulo => articulo.id === idArticulo).stock += articuloCarrito.cantidad;
 
     carritoDeCompras.splice(carritoDeCompras.findIndex(articulo => articulo.id === idArticulo), 1);
     localStorage.setItem("carritoDeCompras", JSON.stringify(carritoDeCompras));
     carrito();
+    mostrarProductos();
 }
 
 
@@ -197,15 +260,7 @@ function carrito(){
         carritoDeCompras = JSON.parse(localStorage.getItem("carritoDeCompras"));
     }
     
-    let carrito = document.getElementById("carrito");
-    if(carrito.classList.contains('hidden')){
-        carrito.classList.remove('hidden');
-    }
-    
-    let articulos = document.getElementById("main_shop__articles");
-    if(!articulos.classList.contains('hidden')){
-        articulos.classList.add('hidden');
-    }
+    console.table(articulosJson);    
 
     const carritoArticulos = document.getElementById('carrito__articulos');
     
