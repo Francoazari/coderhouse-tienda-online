@@ -100,7 +100,7 @@ function mostrarProductos(articulos = articulosJson, soloDisponibles = true){
 
         //button
         const articleButton = document.createElement('button');
-        articleButton.innerHTML = (articulo.stock > 0) ? "AGREGAR AL CARRITO": "SIN STOCK";
+        articleButton.innerHTML = (articulo.stock > 0) ? "<i class=\"fa-solid fa-cart-shopping\"></i> AGREGAR AL CARRITO": "SIN STOCK";
         articleButton.classList.add('article__button');
         if(articulo.stock > 0){
             articleButton.classList.add('con-stock');
@@ -118,9 +118,18 @@ function mostrarProductos(articulos = articulosJson, soloDisponibles = true){
         if(isArticleInCart(articulo.id)){
             
             articleInCart.classList.add('in-cart');
+            const divContainerInCart = document.createElement('div');
+            divContainerInCart.classList.add('in-cart-div');
             const articleInCartP = document.createElement('p');
             articleInCartP.innerHTML = "IN CART";
-            articleInCart.appendChild(articleInCartP);
+            const iconTrash = document.createElement('i');
+            iconTrash.classList.add('fa-solid', 'fa-trash');
+            iconTrash.addEventListener('click', () => eliminarArticuloCarrito(articulo.id));
+            
+            divContainerInCart.appendChild(articleInCartP);
+            divContainerInCart.appendChild(iconTrash);
+
+            articleInCart.appendChild(divContainerInCart);
             
         }
         
@@ -307,7 +316,7 @@ function carrito(){
             //eliminar
             const carritoArticuloEliminar = document.createElement('div');
             carritoArticuloEliminar.classList.add('carrito__articulo_eliminar');
-            carritoArticuloEliminar.innerHTML = `X`;
+            carritoArticuloEliminar.innerHTML = '<i class="fa-solid fa-trash"></i>';
             carritoArticuloEliminar.addEventListener("click", () => eliminarArticuloCarrito(articulo.id));
 
             carritoArticulo.appendChild(carritoArticuloImage);
