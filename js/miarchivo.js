@@ -204,13 +204,54 @@ function agregarAlCarrito(idArticulo){
             }
 
             localStorage.setItem("carritoDeCompras", JSON.stringify(carritoDeCompras)); //guarda el carrito en el localstorage
+            Toastify({
+                text: `Se ha agregado ${articuloElegido.nombre} al carrito`,
+                duration: 1500,
+                destination: "https://github.com/apvarun/toastify-js",
+                newWindow: true,
+                close: true,
+                gravity: "top", // `top` or `bottom`
+                position: "left", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                  background: "linear-gradient(to right, #00b09b, #96c93d)",
+                },
+                onClick: function(){} // Callback after click
+              }).showToast();
+
             mostrarProductos(); //actualiza los productos en pantalla
 
         }else{
-            console.log("¡Lo sentimos! No hay stock disponible.");    
+            Toastify({
+                text: `No hay stock del articulo seleccionado`,
+                duration: 1500,
+                destination: "https://github.com/apvarun/toastify-js",
+                newWindow: true,
+                close: true,
+                gravity: "top", // `top` or `bottom`
+                position: "left", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: "linear-gradient(0deg, rgba(130,130,130,1) 0%, rgba(201,201,201,1) 100%)",
+                },
+                onClick: function(){} // Callback after click
+              }).showToast();
         }
     }else{
-        console.error("El ID del articulo no existe. Intente nuevamente.");
+        Toastify({
+            text: `Lo sentimos, el articulo seleccionado no se encuentra disponible`,
+            duration: 1500,
+            destination: "https://github.com/apvarun/toastify-js",
+            newWindow: true,
+            close: true,
+            gravity: "top", // `top` or `bottom`
+            position: "left", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            style: {
+                background: "linear-gradient(0deg, rgba(212,0,0,1) 0%, rgba(252,160,160,1) 100%)",
+            },
+            onClick: function(){} // Callback after click
+          }).showToast();
     }
     
 }
@@ -258,6 +299,20 @@ function eliminarArticuloCarrito(idArticulo) { //Elimina un articulo del carrito
     carritoDeCompras.splice(carritoDeCompras.findIndex(articulo => articulo.id === idArticulo), 1); //elimina la posicion del array
     localStorage.setItem("carritoDeCompras", JSON.stringify(carritoDeCompras)); //actualiza informacion dle carrito en localstorage
     carrito(); //muestra los articulos del carrito en pantalla
+    Toastify({
+        text: `Articulo eliminado del carrito`,
+        duration: 1500,
+        destination: "https://github.com/apvarun/toastify-js",
+        newWindow: true,
+        close: true,
+        gravity: "top", // `top` or `bottom`
+        position: "left", // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style: {
+            background: "linear-gradient(0deg, rgba(212,0,0,1) 0%, rgba(252,160,160,1) 100%)",
+        },
+        onClick: function(){} // Callback after click
+      }).showToast();
     mostrarProductos(); //actualiza los articulos en la seccion de tienda online
 }
 
