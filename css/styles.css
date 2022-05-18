@@ -294,7 +294,7 @@ body {
 
 .sin-stock{
     background-color: #b9b9b9;
-    cursor: none;
+    cursor: default;
 }
 
 .con-stock:hover {
