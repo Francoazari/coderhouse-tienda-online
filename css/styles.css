@@ -66,6 +66,10 @@ body {
     background-color: #c4c4c4;
 }
 
+#nav li.submenu-item{
+    padding-left: 20px;
+}
+
 #main_shop{
     width: 75%
 }

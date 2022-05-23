@@ -3,6 +3,7 @@ const jsonTiendaPath = "./js/tienda.json";
 let carritoDeCompras = [];
 
 let articulosJson;
+let categorias;
 let menuJson;
 
 window.onload = function() { //Cuando se cargue la pagina
@@ -22,16 +23,76 @@ window.onload = function() { //Cuando se cargue la pagina
         })
 };
 
+function mostrarMenu(menuItems){ //muestra el menu en pantalla
+
+    if(menuItems.length > 0){
+        const menu = document.getElementById('nav');
+        const ulMenu = document.createElement('ul');
+
+        for (menuItem of menuItems) { //recorre el array de menu
+            (function () {
+                const liMenu = document.createElement('li');
+                liMenu.setAttribute("id","option-" + menuItem.id);
+                liMenu.classList.add("menu-item");
+                if(menuItem.subMenu) liMenu.classList.add("has-subMenu");
+                if (menuItem.default) {
+                    liMenu.classList.add("active");
+                }
+                liMenu.innerHTML = (menuItem.subMenu) ?  `${menuItem.label} <i class=\"fa-solid fa-angle-right \"></i>` : menuItem.label;
+                if(menuItem.subMenu){
+                    liMenu.addEventListener("click", () => toggleSubmenu(liMenu.getAttribute("id")));
+                }else{
+                    liMenu.addEventListener("click", () => menuOptions(liMenu.getAttribute("id")));
+                }
+                
+                ulMenu.appendChild(liMenu);
+
+                if(menuItem.subMenu){
+                    const divSubsection = document.createElement('div');
+                    divSubsection.setAttribute("id","submenu-option-" + menuItem.id);
+                    divSubsection.classList.add( "hidden");
+                    for(subItem of menuItem.subMenu) {
+                        const liSubmenu = document.createElement('li');
+                        liSubmenu.setAttribute("id","sub-option-" + subItem.id);
+                        liSubmenu.classList.add("submenu-item");
+                        if (menuItem.default) {
+                            liSubmenu.classList.add("active");
+                        }
+                        liSubmenu.innerHTML = subItem.label;
+
+                        divSubsection.appendChild(liSubmenu);
+                    }
+                    ulMenu.appendChild(divSubsection);
+                }
+                
+            }())
+            
+        }
+        menu.appendChild(ulMenu);
+    }
+}
+
+function toggleSubmenu(idMenu) {
+    if(!idMenu) return;
+
+    const subMenu = document.getElementById("submenu-" + idMenu);
+    if(subMenu.classList.contains('hidden')){
+        subMenu.classList.remove('hidden');
+    }else{
+        subMenu.classList.add('hidden');
+    }
+}
+
 function menuOptions(idMenu) {
     if(!idMenu) return;
 
     setActiveItemMenu(idMenu);
 
     switch(idMenu) {
-        case "option0":
+        case "option-inicio":
             mostrarTiendaOnline();
             break;
-        case "option1":
+        case "option-carrito":
             mostrarCarrito();
             carrito();
             break;
@@ -43,7 +104,6 @@ function setActiveItemMenu(idMenu){ //agrega la clase active a la opcion del men
     const menuItems = document.getElementsByClassName("menu-item");
 
     for(menuItem of menuItems){
-        console.log();
         if(menuItem.classList.contains("active") && menuItem.id !== idMenu){
             menuItem.classList.remove("active");
         }else if(!menuItem.classList.contains("active") && menuItem.id === idMenu){
@@ -58,7 +118,7 @@ function getCarritoFromLocalStorage(){ //Obtiene datos del carrito del localstor
     }
 }
 
-function mostrarProductos(articulos = articulosJson, soloDisponibles = true){
+function mostrarProductos(articulos = articulosJson, soloDisponibles = false){
 
     const mainShop = document.getElementById('main_shop__articles');
     mainShop.innerHTML = '';
@@ -137,30 +197,6 @@ function mostrarProductos(articulos = articulosJson, soloDisponibles = true){
         articleInCart.appendChild(article);
         //agrega el articulo a la pantalla
         mainShop.appendChild(articleInCart);
-    }
-}
-
-function mostrarMenu(menuItems){ //muestra el menu en pantalla
-
-    if(menuItems.length > 0){
-        const menu = document.getElementById('nav');
-        const ulMenu = document.createElement('ul');
-
-        for (menuItem of menuItems) { //recorre el array de menu
-            (function () {
-                const liMenu = document.createElement('li');
-                liMenu.setAttribute("id","option" + menuItem.id);
-                liMenu.classList.add("menu-item");
-                if (menuItem.default) {
-                    liMenu.classList.add("active");
-                } 
-                liMenu.innerHTML = menuItem.label;
-                liMenu.addEventListener("click", () => menuOptions(liMenu.getAttribute("id")));
-                ulMenu.appendChild(liMenu);
-            }())
-            
-        }
-        menu.appendChild(ulMenu);
     }
 }
 

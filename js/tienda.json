@@ -1,18 +1,44 @@
 {
     "menu":[
         {
-            "id": 0,
-            "label": "Articulos",
+            "id": "inicio",
+            "label": "Inicio",
+            "order": 1,
             "default": true
         },
         {
-            "id": 1,
-            "label": "Carrito de compras"
+            "id": "categorias",
+            "label": "Categorias",
+            "order": 2,
+            "subMenu": [
+                {
+                    "id": 0,
+                    "label": "Gaseosas"
+                },
+                {
+                    "id": 1,
+                    "label": "Electrodomesticos"
+                },
+                {
+                    "id": 2,
+                    "label": "Bazar"
+                },
+                {
+                    "id": 3,
+                    "label": "Vehiculos"
+                }
+            ]
         },
         {
-            "id": 2,
+            "id": "carrito",
+            "label": "Carrito de compras",
+            "order": 3
+        },
+        {
+            "id": "area-empleados",
             "label": "Area de empleados",
-            "password": "1234"
+            "password": "1234",
+            "order": 4
         }
         
     ],
