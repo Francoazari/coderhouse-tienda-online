@@ -79,6 +79,23 @@ body {
 }
 
 #main_shop__articles {
+    display: flex;
+    flex-direction: column;
+}
+
+.word-to-search{
+    display: flex;
+    flex-direction: row;
+    font-size: 12px;
+    padding: 15px;
+}
+
+.word-to-search-bold {
+    font-weight: bold;
+    display: inline;
+}
+
+.container-articles{
     width: 100%;
     padding: 20px;
     display: grid;

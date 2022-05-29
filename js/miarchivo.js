@@ -18,9 +18,19 @@ window.onload = function() { //Cuando se cargue la pagina
 
             mostrarMenu(menuJson); //mostramos el menu
             actualizarStock(articulosJson); //Como los articulos no los guardamos en el localstorage, cada vez que se inicia la pagina, hay que chequear el stock
-            mostrarProductos(articulosJson, true) //muestra los productos en pantalla
+            actulizarSearchInput();
+            mostrarProductos(articulosJson, true); //muestra los productos en pantalla
         })
 };
+
+function actulizarSearchInput(){
+    const inputSearch = document.getElementById("nav__search");
+
+    if(localStorage.getItem("wordToSearch")){
+        inputSearch.value = localStorage.getItem("wordToSearch");
+    }
+    return;
+}
 
 function menuOptions(idMenu) {
     if(!idMenu) return;
@@ -60,12 +70,33 @@ function getCarritoFromLocalStorage(){ //Obtiene datos del carrito del localstor
 
 function mostrarProductos(articulos = articulosJson, soloDisponibles = true){
 
+    let wordToSearch;
+
     if(localStorage.getItem("wordToSearch")){
-        articulos = articulos.filter(articulo => articulo.nombre.toLowerCase().includes(localStorage.getItem("wordToSearch")));
+        wordToSearch = localStorage.getItem("wordToSearch").toLowerCase();
+        articulos = articulos.filter(articulo => articulo.nombre.toLowerCase().includes(wordToSearch));
     }
 
     const mainShop = document.getElementById('main_shop__articles');
     mainShop.innerHTML = '';
+
+    if(wordToSearch){
+        const divWordToSearch = document.createElement("div");
+        divWordToSearch.classList.add("word-to-search");
+
+        const spanWordToSearch = document.createElement("div");
+
+        const divBoldWordToSearch = document.createElement("div");
+        divBoldWordToSearch.classList.add("word-to-search-bold");
+        divBoldWordToSearch.innerHTML = wordToSearch;
+
+        spanWordToSearch.innerHTML = "Resultados para \"" + divBoldWordToSearch.outerHTML + "\"";
+        divWordToSearch.appendChild(spanWordToSearch);
+        mainShop.appendChild(divWordToSearch);
+    }
+
+    const articleContainer = document.createElement('div');
+    articleContainer.classList.add("container-articles");
 
     for (const articulo of articulos) { //recorre los articulos
 
@@ -138,9 +169,7 @@ function mostrarProductos(articulos = articulosJson, soloDisponibles = true){
         if(articulo.stock > 0 && !isArticleInCart(articulo.id)){
             articleButton.classList.add('con-stock');
             articleButton.addEventListener("click", () => agregarAlCarrito(articulo.id));
-        } else if(articulo.stock > 0 && isArticleInCart(articulo.id)) { 
-
-        } else{
+        } else {
             articleButton.classList.add('sin-stock');
         }
 
@@ -171,8 +200,9 @@ function mostrarProductos(articulos = articulosJson, soloDisponibles = true){
         //arma el bloque de codigo final
         articleInCart.appendChild(article);
         //agrega el articulo a la pantalla
-        mainShop.appendChild(articleInCart);
+        articleContainer.appendChild(articleInCart);
     }
+    mainShop.appendChild(articleContainer)
 }
 
 function mostrarMenu(menuItems){ //muestra el menu en pantalla
