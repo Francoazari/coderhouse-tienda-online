@@ -17,7 +17,7 @@ body {
 }
 
 .hidden{
-    display: none !important; 
+    display: none !important;
 }
 
 .container {
@@ -75,7 +75,8 @@ body {
 }
 
 #main_shop{
-    width: 75%
+    width: 75%;
+    padding: 10px;
 }
 
 #main_shop__articles {
@@ -104,10 +105,6 @@ body {
     justify-items: center;
 }
 
-.carrito__compras{
-    padding: 10px;
-}
-
 .carrito__heading{
     font-size: 1.5em;
     font-weight: bold;
@@ -129,7 +126,6 @@ body {
 #carrito__articulos_vacio p {
     padding: 50px 0 50px 0;
     font-size: 1em;
-    font-weight: bold;
     text-align: center;
 }
 
@@ -196,7 +192,7 @@ body {
 }
 
 .carrito_info {
-    justify-content: space-between;
+    justify-content: space-evenly;
 }
 
 .carrito__cantidad_articulos,
@@ -204,7 +200,6 @@ body {
     background-color: #a7a7a7;
     border-radius: 5px;
     padding: 15px;
-    margin-top: 15px;
 }
 
 .carrito__cantidad_articulos div, 
@@ -260,6 +255,111 @@ body {
 .in-cart-div i:hover{
     color: red;
 }
+
+.mostrar-seccion {
+    opacity: 1!important;
+}
+
+#cargar-datos-section{
+    margin-top: 15px;
+    opacity: 0;
+    transition: all 0.25s;
+}
+
+
+
+#cargar-datos-section h4{
+    margin-bottom: 5px;
+}
+
+#cargar-datos-section p{
+    font-size: 14px;
+}
+
+#cargar-datos-section form{
+    margin-top: 15px;
+}
+
+.form_button{
+    display: inline;
+    width: 45%;
+    height: 30px;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.form_send {
+    background-color: #69da98;
+}
+
+.form_send:hover {
+    background-color: #31df79;
+}
+
+.form_cancelar {
+    background-color: #fc6f6f;
+}
+
+.form_cancelar:hover {
+    background-color: #f74949;
+}
+
+.datos-invalidos{
+    color: red;
+}
+
+.form_pago_input{
+    width: 40%;
+    height: 40px;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.form_pago_input:invalid {
+    border: 1px solid red;
+}
+
+.form_pago_input:valid {
+    border: 2px solid rgb(17, 138, 37);
+}
+
+.form__nombre, .form__apellido{
+    width: 45%;
+}
+
+.form__direccion{
+    width: 45%;
+} 
+
+.form__piso{
+    width: 22.5%;
+} 
+
+.form__depto{
+    width: 22.5%;
+}
+
+.form__telefono{
+    width: 45%;
+}
+
+.form__nro_tarjeta{
+    width: 90%;
+}
+
+.form__vencimiento{
+    width: 45%;
+}
+
+.form__cod_seg{
+    width: 45%;
+}
+
+
 
 .article__image img{
     width: 180px;
@@ -326,6 +426,10 @@ body {
     background-color: #95ffc1;
 }
 
+.menos, .mas{
+    width: 33%;
+}
+
 .div-container{
     width: 100%;
     display: flex;
@@ -368,6 +472,71 @@ body {
     display: flex;
     flex-direction: row;
 }
+
+.carrito__pagar{
+    background-color: #000b70;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.carrito__pagar_disable{
+    background-color: #c5c5c5;
+    color: black;
+}
+
+.carrito__pagar:hover{
+    background-color: #1826a3;
+}
+#datos-confirmar {
+    margin: 10px;
+}
+
+#datos-confirmar td{
+    padding: 10px;
+}
+
+.datos-confirmar-title{
+    font-weight: bold;
+}
+
+.button{
+    width: 25%;
+}
+
+.button_confirmar{
+    background-color: #000b70;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.button_confirmar:hover{
+    background-color: #1826a3;
+}
+
+.button_volver{
+    background-color: #a5a5a5;
+    color: black;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.button_volver:hover{
+    background-color: #c2c2c2;
+}
+
+#pago-realizado{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.img-pago{
+    width: 30%;
+    margin: 40px;
+}
+
 
 footer {
     border-top: 1px solid #c9c9c9;
