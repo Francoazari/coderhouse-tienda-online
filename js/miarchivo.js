@@ -67,12 +67,12 @@ function setActiveItemMenu(idMenu) {
 
     for (menuItem of menuItems) {
         if (menuItem.classList.contains("active") && menuItem.id !== idMenu) {
-            menuItem.classList.remove("active");
+            eliminarClase("active", menuItem);
         } else if (
             !menuItem.classList.contains("active") &&
             menuItem.id === idMenu
         ) {
-            menuItem.classList.add("active");
+            agregarClase("active", menuItem);
         }
     }
 }
@@ -251,7 +251,7 @@ function mostrarMenu(menuItems) {
             (function () {
                 const liMenu = document.createElement("li");
                 liMenu.setAttribute("id", "option" + menuItem.id);
-                liMenu.classList.add("menu-item");
+                agregarClase("menu-item", liMenu);
                 if (menuItem.default) {
                     liMenu.classList.add("active");
                 }
@@ -384,14 +384,10 @@ function mostrarTiendaOnline() {
     //muestra la seccion de tienda online en pantalla
 
     let articulos = document.getElementById("main_shop__articles");
-    if (articulos.classList.contains("hidden")) {
-        articulos.classList.remove("hidden");
-    }
+    eliminarClase("hidden", articulos);
 
     let carrito = document.getElementById("carrito");
-    if (!carrito.classList.contains("hidden")) {
-        carrito.classList.add("hidden");
-    }
+    agregarClase("hidden", carrito);
 }
 
 function vaciarConfirmarPago() {
@@ -406,31 +402,21 @@ function vaciarConfirmarPago() {
 function mostrarCarrito() {
     // muestra la seccion de carrito de compras en pantalla
     let carrito = document.getElementById("carrito");
-    if (carrito.classList.contains("hidden")) {
-        carrito.classList.remove("hidden");
-    }
+    eliminarClase("hidden", carrito);
 
     let carritoSection = document.getElementById("carrito-section");
-    if (carritoSection.classList.contains("hidden")) {
-        carritoSection.classList.remove("hidden");
-    }
+    eliminarClase("hidden", carritoSection);
 
     let cargarDatosSection = document.getElementById("cargar-datos-section");
-    if (!cargarDatosSection.classList.contains("hidden")) {
-        cargarDatosSection.classList.add("hidden");
-    }
+    agregarClase("hidden", cargarDatosSection);
 
     let confirmarDatosSection = document.getElementById(
         "confirmar-datos-section"
     );
-    if (!confirmarDatosSection.classList.contains("hidden")) {
-        confirmarDatosSection.classList.add("hidden");
-    }
+    agregarClase("hidden", confirmarDatosSection);
 
     let articulos = document.getElementById("main_shop__articles");
-    if (!articulos.classList.contains("hidden")) {
-        articulos.classList.add("hidden");
-    }
+    agregarClase("hidden", articulos);
 }
 
 function getImagenArticulo(idArticulo) {
@@ -490,7 +476,7 @@ function carrito() {
     }
 
     let cargarDatosSection = document.getElementById("cargar-datos-section");
-    cargarDatosSection.classList.remove("mostrar-seccion");
+    eliminarClase("mostrar-seccion", cargarDatosSection);
 
     const carritoArticulos = document.getElementById("carrito__articulos");
 
@@ -500,9 +486,7 @@ function carrito() {
         const carritoVacio = document.getElementById(
             "carrito__articulos_vacio"
         );
-        if (!carritoVacio.classList.contains("hidden")) {
-            carritoVacio.classList.add("hidden");
-        }
+        agregarClase("hidden", carritoVacio);
 
         carritoArticulos.innerHTML = "";
 
@@ -569,9 +553,7 @@ function carrito() {
         const carritoVacio = document.getElementById(
             "carrito__articulos_vacio"
         );
-        if (carritoVacio.classList.contains("hidden")) {
-            carritoVacio.classList.remove("hidden");
-        }
+        eliminarClase("hidden", carritoVacio);
     }
 
     let cantidadDeArticulos = document.getElementById(
@@ -594,20 +576,12 @@ function carrito() {
 
     let pagarButton = document.getElementsByClassName("carrito__pagar");
     if (carritoDeCompras.length > 0) {
-        if (pagarButton[0].classList.contains("hidden")) {
-            pagarButton[0].classList.remove("hidden");
-        }
+        eliminarClase("hidden", pagarButton[0]);
         pagarButton[0].addEventListener("click", () => pagar());
-        if (pagarButton[0].classList.contains("carrito__pagar_disable")) {
-            pagarButton[0].classList.remove("carrito__pagar_disable");
-        }
+        eliminarClase("carrito__pagar_disable", pagarButton[0]);
     } else {
-        if (!pagarButton[0].classList.contains("hidden")) {
-            pagarButton[0].classList.add("hidden");
-        }
-        if (!pagarButton[0].classList.contains("carrito__pagar_disable")) {
-            pagarButton[0].classList.add("carrito__pagar_disable");
-        }
+        agregarClase("hidden", pagarButton[0]);
+        agregarClase("carrito__pagar_disable", pagarButton[0]);
     }
 }
 
@@ -615,16 +589,12 @@ function pagar() {
     vaciarConfirmarPago();
 
     let pagarButton = document.getElementsByClassName("carrito__pagar");
-    pagarButton[0].classList.add("hidden");
+    agregarClase("hidden", pagarButton[0]);
 
     let cargarDatosSection = document.getElementById("cargar-datos-section");
 
-    if (cargarDatosSection.classList.contains("hidden")) {
-        cargarDatosSection.classList.remove("hidden");
-    }
-    if (!cargarDatosSection.classList.contains("mostrar-seccion")) {
-        cargarDatosSection.classList.add("mostrar-seccion");
-    }
+    eliminarClase("hidden", cargarDatosSection);
+    agregarClase("mostrar-seccion", cargarDatosSection);
 
     let sendButton = document.getElementsByClassName("form_send");
     sendButton[0].addEventListener("click", (e) => confirmarPagos(e));
@@ -635,9 +605,6 @@ function pagar() {
 
 function validarDatos(inputs) {
     for (input of inputs) {
-        console.log(input);
-        console.log(input.validity);
-        console.log(input.validity.valid);
         if (!input.validity.valid) {
             return false;
         }
@@ -734,16 +701,12 @@ function confirmarCompra() {
 
 function cancelarPago(e) {
     e.preventDefault();
-    console.log("cancelar");
 
-    let pagarSection = document.getElementById("pagar-section");
+    let cargarDatosSection = document.getElementById("cargar-datos-section");
 
-    if (!pagarSection.classList.contains("hidden")) {
-        pagarSection.classList.add("hidden");
-    }
-    if (pagarSection.classList.contains("mostrar-seccion")) {
-        pagarSection.classList.remove("mostrar-seccion");
-    }
+    agregarClase("hidden", cargarDatosSection);
+    eliminarClase("mostrar-seccion", cargarDatosSection);
+
     vaciarConfirmarPago();
     carrito();
 }
