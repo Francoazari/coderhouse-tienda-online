@@ -270,6 +270,7 @@ function mostrarMenu(menuItems) {
 }
 
 function searchArticles(wordTosearch) {
+    //Se setea un filtro para la busqueda de articulos y se guarda en el localstorage
     if (wordTosearch) localStorage.setItem("wordToSearch", wordTosearch);
     else localStorage.removeItem("wordToSearch");
 
@@ -401,21 +402,21 @@ function vaciarConfirmarPago() {
 
 function mostrarCarrito() {
     // muestra la seccion de carrito de compras en pantalla
-    let carrito = document.getElementById("carrito");
+    let carrito = document.getElementById("carrito"); //Se muestra seccion de carrito
     eliminarClase("hidden", carrito);
 
-    let carritoSection = document.getElementById("carrito-section");
+    let carritoSection = document.getElementById("carrito-section"); //Se muestran los articulos del carrito
     eliminarClase("hidden", carritoSection);
 
-    let cargarDatosSection = document.getElementById("cargar-datos-section");
+    let cargarDatosSection = document.getElementById("cargar-datos-section"); //se oculta la carga de datos
     agregarClase("hidden", cargarDatosSection);
 
     let confirmarDatosSection = document.getElementById(
         "confirmar-datos-section"
-    );
+    ); //Se oculta la confirmacion de datos
     agregarClase("hidden", confirmarDatosSection);
 
-    let articulos = document.getElementById("main_shop__articles");
+    let articulos = document.getElementById("main_shop__articles"); //se oculta la seccion de articulos
     agregarClase("hidden", articulos);
 }
 
@@ -447,7 +448,7 @@ function eliminarArticuloCarrito(idArticulo, cantidad = 0) {
                 (articulo) => articulo.id === idArticulo
             ),
             1
-        ); //elimina la posicion del array
+        ); //elimina el articulo del array
         Toastify({
             text: `Articulo eliminado del carrito`,
             duration: 1500,
@@ -475,7 +476,7 @@ function carrito() {
         carritoDeCompras = JSON.parse(localStorage.getItem("carritoDeCompras"));
     }
 
-    let cargarDatosSection = document.getElementById("cargar-datos-section");
+    let cargarDatosSection = document.getElementById("cargar-datos-section"); //oculta la carga de datos
     eliminarClase("mostrar-seccion", cargarDatosSection);
 
     const carritoArticulos = document.getElementById("carrito__articulos");
@@ -486,7 +487,7 @@ function carrito() {
         const carritoVacio = document.getElementById(
             "carrito__articulos_vacio"
         );
-        agregarClase("hidden", carritoVacio);
+        agregarClase("hidden", carritoVacio); //se oculta el div de carrito vacio
 
         carritoArticulos.innerHTML = "";
 
@@ -576,34 +577,39 @@ function carrito() {
 
     let pagarButton = document.getElementsByClassName("carrito__pagar");
     if (carritoDeCompras.length > 0) {
+        //Si el carrito tiene algun articulo el boton de pagar se habilita
         eliminarClase("hidden", pagarButton[0]);
-        pagarButton[0].addEventListener("click", () => pagar());
+        pagarButton[0].addEventListener("click", () => cargarDatos());
         eliminarClase("carrito__pagar_disable", pagarButton[0]);
     } else {
+        //Si no hay articulos en el carrito, se deshabilita el boton de pagar
         agregarClase("hidden", pagarButton[0]);
         agregarClase("carrito__pagar_disable", pagarButton[0]);
     }
 }
 
-function pagar() {
-    vaciarConfirmarPago();
+function cargarDatos() {
+    vaciarConfirmarPago(); //se resetea el form
 
     let pagarButton = document.getElementsByClassName("carrito__pagar");
-    agregarClase("hidden", pagarButton[0]);
+    agregarClase("hidden", pagarButton[0]); //se oculta el boton de pagar
 
     let cargarDatosSection = document.getElementById("cargar-datos-section");
-
+    // Se muestra la seccion de cargar datos
     eliminarClase("hidden", cargarDatosSection);
     agregarClase("mostrar-seccion", cargarDatosSection);
 
+    //Se agrega evento para enviar el formulario
     let sendButton = document.getElementsByClassName("form_send");
-    sendButton[0].addEventListener("click", (e) => confirmarPagos(e));
+    sendButton[0].addEventListener("click", (e) => confirmarDatos(e));
 
+    //se agrega evento para cancelar el pago
     let cancelarButton = document.getElementsByClassName("form_cancelar");
     cancelarButton[0].addEventListener("click", (e) => cancelarPago(e));
 }
 
 function validarDatos(inputs) {
+    //Funcion para validar los datos del formulario, solo con validaciones de HTML
     for (input of inputs) {
         if (!input.validity.valid) {
             return false;
@@ -612,31 +618,36 @@ function validarDatos(inputs) {
     return true;
 }
 
-function confirmarPagos(e) {
-    e.preventDefault();
+function cargarDatos(e) {
+    e.preventDefault(); //Evitar enviar y recargar la apgina
 
     const datosInvalidosMessage =
         document.getElementsByClassName("datos-invalidos");
 
+    //Si los datos ingresados en el formulario son validos
     if (validarDatos(document.getElementById("form-pago").elements)) {
         agregarClase("hidden", datosInvalidosMessage[0]);
 
+        //Oculta la seccion del carrito
         const carritoSection = document.getElementById("carrito-section");
         agregarClase("hidden", carritoSection);
         eliminarClase("mostrar-seccion", carritoSection);
 
+        //Oculta la carga de datos
         const cargarDatosSection = document.getElementById(
             "cargar-datos-section"
         );
         agregarClase("hidden", cargarDatosSection);
         eliminarClase("mostrar-seccion", cargarDatosSection);
 
+        //Muestra la seccion de confirmacion de datos
         const confirmarDatosSection = document.getElementById(
             "confirmar-datos-section"
         );
         eliminarClase("hidden", confirmarDatosSection);
         agregarClase("mostrar-seccion", confirmarDatosSection);
 
+        //Arma un array con los datos del array para guardar los datos en localstorage
         const formPago = document.getElementById("form-pago").elements;
         var dataUsuarioPago = {};
         for (var i = 0; i < formPago.length; i++)
@@ -645,6 +656,7 @@ function confirmarPagos(e) {
 
         localStorage.setItem("datos_usuario", dataUsuarioPago);
 
+        //Completa los datos de la seccion de confirmacion con los datos del form
         const confirmarNombre = document.getElementById("confirmar-nombre");
         confirmarNombre.innerHTML = `${dataUsuarioPago.nombre} ${dataUsuarioPago.apellido}`;
         const confirmarDireccion = document.getElementById(
@@ -671,25 +683,29 @@ function confirmarPagos(e) {
         buttomConfirmar[0].addEventListener("click", () => confirmarCompra());
 
         const buttomVolver = document.getElementsByClassName("button_volver");
-        buttomVolver[0].addEventListener("click", () => volverConfirmacion());
+        buttomVolver[0].addEventListener("click", () => volverCargaDatos());
     } else {
+        //Si los datos ingresados no son validos, muestra un muestra un mensaje de error
         eliminarClase("hidden", datosInvalidosMessage[0]);
     }
 }
 
-function volverConfirmacion() {
+function volverCargaDatos() {
+    //Vuelve a la carga de datos
     const confirmarDatosSection = document.getElementById(
         "confirmar-datos-section"
     );
     agregarClase("hidden", confirmarDatosSection);
 
     mostrarCarrito();
+
     const cargarDatosSection = document.getElementById("cargar-datos-section");
     agregarClase("mostrar-seccion", cargarDatosSection);
     eliminarClase("hidden", cargarDatosSection);
 }
 
 function confirmarCompra() {
+    //Confirma compra y muestra un alert
     swal("¡Gracias por tu compra!", "Compra realizada con éxito", "success", {
         button: false,
     }).then((value) => {
@@ -700,6 +716,7 @@ function confirmarCompra() {
 }
 
 function cancelarPago(e) {
+    //Se cancela el pago
     e.preventDefault();
 
     let cargarDatosSection = document.getElementById("cargar-datos-section");
@@ -712,6 +729,7 @@ function cancelarPago(e) {
 }
 
 function getCantidadArticulosEnCarrito(idArticulo) {
+    //Devuelve la cantidad de aritculos en el carrito
     if (!idArticulo) return;
     return carritoDeCompras.find(
         (articuloCarrito) => articuloCarrito.id === idArticulo
