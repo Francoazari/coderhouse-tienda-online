@@ -1,5 +1,5 @@
 {
-    "menu":[
+    "menu": [
         {
             "id": 0,
             "label": "Articulos",
@@ -8,54 +8,48 @@
         {
             "id": 1,
             "label": "Carrito de compras"
+        }
+    ],
+    "articulos": [
+        {
+            "id": 1,
+            "nombre": "Agua",
+            "descripcion": "Agua descripcion",
+            "img": "./images/articulos/agua.png",
+            "precio": 110,
+            "stock": 5
         },
         {
             "id": 2,
-            "label": "Area de empleados",
-            "password": "1234"
+            "nombre": "Coca cola",
+            "descripcion": "Coca cola descripcion asdasdjashgbsdfs dsafaf dfk sgfsdfsdf asdasdjashgbsdfs dsafaf dfk sgfsdfsdf asdasdjashgbsdfs dsafaf dfk sgfsdfsdf asdasdjashgbsdfs dsafaf dfk sgfsdfsdf",
+            "img": "./images/articulos/cocacola.jpg",
+            "precio": 210,
+            "stock": 8
+        },
+        {
+            "id": 3,
+            "nombre": "Sprite",
+            "descripcion": "Sprite descripcion",
+            "img": "./images/articulos/sprite.jpg",
+            "precio": 200,
+            "stock": 15
+        },
+        {
+            "id": 4,
+            "nombre": "Levite",
+            "descripcion": "Levite descripcion",
+            "img": "./images/articulos/levite.jpg",
+            "precio": 150,
+            "stock": 20
+        },
+        {
+            "id": 5,
+            "nombre": "Fernet",
+            "descripcion": "Fernet descripcion",
+            "img": "./images/articulos/fernet.jpg",
+            "precio": 500,
+            "stock": 12
         }
-        
-    ],
-    "articulos":[
-    {
-        "id": 1, 
-        "nombre": "Agua",
-        "descripcion": "Agua descripcion",
-        "img": "./images/articulos/agua.png",
-        "precio": 110, 
-        "stock": 5
-    },
-    {
-        "id": 2, 
-        "nombre": "Coca cola",
-        "descripcion": "Coca cola descripcion asdasdjashgbsdfs dsafaf dfk sgfsdfsdf asdasdjashgbsdfs dsafaf dfk sgfsdfsdf asdasdjashgbsdfs dsafaf dfk sgfsdfsdf asdasdjashgbsdfs dsafaf dfk sgfsdfsdf",
-        "img": "./images/articulos/cocacola.jpg",
-        "precio": 210,
-        "stock": 8
-    },
-    {
-        "id": 3, 
-        "nombre": "Sprite",
-        "descripcion": "Sprite descripcion",
-        "img": "./images/articulos/sprite.jpg",
-        "precio": 200,
-        "stock": 15
-    },
-    {
-        "id": 4, 
-        "nombre": "Levite",
-        "descripcion": "Levite descripcion",
-        "img": "./images/articulos/levite.jpg",
-        "precio": 150,
-        "stock": 20
-    },
-    {
-        "id": 5, 
-        "nombre": "Fernet",
-        "descripcion": "Fernet descripcion",
-        "img": "./images/articulos/fernet.jpg",
-        "precio": 500,
-        "stock": 12
-    }
-  ]
+    ]
 }
