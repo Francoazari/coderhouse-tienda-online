@@ -1,6 +1,7 @@
 const jsonTiendaPath = "./js/tienda.json";
 
 let carritoDeCompras = [];
+let misCompras = [];
 
 let articulosJson;
 let menuJson;
@@ -16,10 +17,22 @@ window.onload = function () {
             menuJson = data["menu"];
             articulosJson = data["articulos"];
 
-            mostrarMenu(menuJson); //mostramos el menu
             actualizarStock(articulosJson); //Como los articulos no los guardamos en el localstorage, cada vez que se inicia la pagina, hay que chequear el stock
             actulizarSearchInput();
-            mostrarProductos(articulosJson, true); //muestra los productos en pantalla
+            mostrarMenu(menuJson); //mostramos el menu
+            mostrarProductos();
+            
+        })
+        .catch((error) => {
+            swal(
+                "¡Lo sentimos! Ha ocurrido un error. Por favor contactese con el administrador para más información.",
+                {
+                    icon: "error",
+                    button: false,
+                    closeOnClickOutside: false,
+                    closeOnEsc: false,
+                }
+            );
         });
 };
 
@@ -32,6 +45,14 @@ function agregarClase(className, section) {
 function eliminarClase(className, section) {
     if (section.classList.contains(className)) {
         section.classList.remove(className);
+    }
+}
+
+function toggleClase(className, section){
+    if (section.classList.contains(className)) {
+        section.classList.remove(className);
+    } else {
+        section.classList.add(className);
     }
 }
 
@@ -50,15 +71,98 @@ function menuOptions(idMenu) {
     setActiveItemMenu(idMenu);
 
     switch (idMenu) {
-        case "option0":
+        case "option1":
+            mostrarProductos();
             mostrarTiendaOnline();
             break;
-        case "option1":
+        case "option2":
             mostrarCarrito();
             carrito();
             break;
+        case "option3":
+            mostrarCompras();
+            break;
     }
 }
+
+function mostrarCompras() {
+    let articulos = document.getElementById("main_shop__articles");
+    agregarClase("hidden", articulos);
+
+    let carrito = document.getElementById("carrito");
+    agregarClase("hidden", carrito);
+
+    let misPedidos = document.getElementById("mis_compras");
+    eliminarClase("hidden", misPedidos);
+
+    mostrarMisCompras();
+}
+
+function mostrarMisCompras() {
+
+    const misComprasData = JSON.parse(localStorage.getItem("mis-compras"));
+    const listaComprasSection = document.getElementById("lista_compras");
+
+    if(misComprasData){
+
+        const divVacio = document.getElementById("lista_compras__vacio");
+        agregarClase("hidden", divVacio);
+
+        listaComprasSection.innerHTML = '';
+        
+        const misComprasList = document.createElement("div");
+        agregarClase("mis_compras__list", misComprasList);
+
+        
+
+        for (compra of misComprasData) {
+            const misComprasItem = document.createElement("div");
+            agregarClase("mis_compras__item", misComprasItem);
+    
+            const misComprasItemFecha = document.createElement("div");
+            agregarClase("mis_compras__div", misComprasItemFecha);
+            agregarClase("mis_compras__item_fecha", misComprasItemFecha);
+            misComprasItemFecha.innerHTML = compra["fecha"];
+    
+            const misComprasItemArticulo = document.createElement("div");
+            agregarClase("mis_compras__div", misComprasItemArticulo);
+            agregarClase("mis_compras__item_articulo", misComprasItemArticulo);
+            
+            for(articuloCompra of compra.articulos){
+                const misComprasItemArticuloSpan =
+                    document.createElement("span");
+                misComprasItemArticuloSpan.innerHTML = articuloCompra.nombre;
+                misComprasItemArticulo.appendChild(misComprasItemArticuloSpan);
+            }
+    
+            const misComprasItemTotal = document.createElement("div");
+            agregarClase("mis_compras__div", misComprasItemTotal);
+            agregarClase("mis_compras__item_total", misComprasItemTotal);
+            misComprasItemTotal.innerHTML = "$" + compra["total"];
+    
+            const misComprasItemVerMas = document.createElement("div");
+            agregarClase("mis_compras__div", misComprasItemVerMas);
+            agregarClase("mis_compras__item_ver_mas", misComprasItemVerMas);
+            misComprasItemVerMas.innerHTML = "Ver más";
+            misComprasItemVerMas.addEventListener("click", (e) => toggleClase("mis_compras__item-active", e.target.parentElement));
+    
+            misComprasItem.appendChild(misComprasItemFecha);
+            misComprasItem.appendChild(misComprasItemArticulo);
+            misComprasItem.appendChild(misComprasItemTotal);
+            misComprasItem.appendChild(misComprasItemVerMas);
+    
+            misComprasList.appendChild(misComprasItem);
+
+            listaComprasSection.appendChild(misComprasList);
+        }
+    }else{
+        //Si no hay compras para mostrar
+        const divVacio = document.getElementById("lista_compras__vacio");
+        console.log(divVacio);
+        eliminarClase("hidden", divVacio);
+    }
+}
+
 
 function setActiveItemMenu(idMenu) {
     //agrega la clase active a la opcion del menu que le corresponda
@@ -82,6 +186,14 @@ function getCarritoFromLocalStorage() {
     if (localStorage.getItem("carritoDeCompras")) {
         carritoDeCompras = JSON.parse(localStorage.getItem("carritoDeCompras"));
     }
+}
+
+function validarArticulo(articulo) {
+    if (articulo.id == undefined) return false;
+    if (articulo.nombre == undefined) return false;
+    if (articulo.precio == undefined) return false;
+    if (articulo.stock == undefined) return false;
+    return true;
 }
 
 function mostrarProductos(articulos = articulosJson, soloDisponibles = true) {
@@ -121,7 +233,10 @@ function mostrarProductos(articulos = articulosJson, soloDisponibles = true) {
             //recorre los articulos
 
             if (!articulo) continue;
+            if (!validarArticulo(articulo)) continue;
             if (!articulo.descripcion) articulo.descripcion = "";
+            if (!articulo.img)
+                articulo.img = "./images/general/articulo-sin-foto.jpg";
 
             const articleInCart = document.createElement("div");
 
@@ -239,6 +354,12 @@ function mostrarProductos(articulos = articulosJson, soloDisponibles = true) {
     mainShop.appendChild(articleContainer);
 }
 
+function validarMenu(menuItem) {
+    if (!menuItem.id) return false;
+    if (!menuItem.label) return false;
+    return true;
+}
+
 function mostrarMenu(menuItems) {
     //muestra el menu en pantalla
 
@@ -248,6 +369,7 @@ function mostrarMenu(menuItems) {
 
         for (menuItem of menuItems) {
             //recorre el array de menu
+            if (!validarMenu(menuItem)) continue;
             (function () {
                 const liMenu = document.createElement("li");
                 liMenu.setAttribute("id", "option" + menuItem.id);
@@ -389,6 +511,9 @@ function mostrarTiendaOnline() {
 
     let carrito = document.getElementById("carrito");
     agregarClase("hidden", carrito);
+
+    let misPedidos = document.getElementById("mis_compras");
+    agregarClase("hidden", misPedidos);
 }
 
 function vaciarConfirmarPago() {
@@ -418,6 +543,9 @@ function mostrarCarrito() {
 
     let articulos = document.getElementById("main_shop__articles"); //se oculta la seccion de articulos
     agregarClase("hidden", articulos);
+
+    let misPedidos = document.getElementById("mis_compras");
+    agregarClase("hidden", misPedidos);
 }
 
 function getImagenArticulo(idArticulo) {
@@ -618,7 +746,7 @@ function validarDatos(inputs) {
     return true;
 }
 
-function cargarDatos(e) {
+function confirmarDatos(e) {
     e.preventDefault(); //Evitar enviar y recargar la apgina
 
     const datosInvalidosMessage =
@@ -705,14 +833,37 @@ function volverCargaDatos() {
 }
 
 function confirmarCompra() {
+    
     //Confirma compra y muestra un alert
     swal("¡Gracias por tu compra!", "Compra realizada con éxito", "success", {
         button: false,
-    }).then((value) => {
-        menuOptions("option0");
-    });
+    })
+        .then(() => {
 
-    vaciarConfirmarPago();
+            misCompras = JSON.parse(localStorage.getItem("mis-compras"));
+            if (!misCompras) misCompras = [];
+
+            let totalAcum = 0;
+            misCompras.push({
+                fecha: new Date().toLocaleDateString("en-US"),
+                articulos: carritoDeCompras,
+                total: carritoDeCompras.reduce(
+                    (totalAcum, articulo) => totalAcum + articulo.subtotal,
+                    totalAcum
+                ),
+            });
+            localStorage.setItem("mis-compras", JSON.stringify(misCompras));
+            vaciarCarrito();
+            vaciarConfirmarPago();
+        })
+        .then(() => {
+            menuOptions("option1");
+        });
+}
+
+function vaciarCarrito() {
+    carritoDeCompras = [];
+    localStorage.removeItem("carritoDeCompras");
 }
 
 function cancelarPago(e) {

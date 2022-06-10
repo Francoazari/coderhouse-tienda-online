@@ -70,8 +70,12 @@ body {
     border-bottom: 1px solid #d6d6d6;
 }
 
-#nav li:hover, #nav li.active {
-    background-color: #c4c4c4;
+#nav li:hover {
+    background-color: #dfdfdf;
+}
+
+#nav li.active {
+    background-color: #d4d4d4;
 }
 
 #main_shop{
@@ -134,7 +138,7 @@ body {
     flex-direction: row;
     text-align: center;
     align-items: center;
-    padding: 5px 0 5px 0;
+    padding: 5px 5px 5px 0;
 }
 
 .carrito__articulo_titulos div, 
@@ -465,6 +469,7 @@ body {
 }
 
 .carrito__articulo:hover {
+    border-radius: 5px;
     background-color: #d1d1d1;
 }
 
@@ -537,6 +542,57 @@ body {
     margin: 40px;
 }
 
+#mis_compras{
+    padding: 10px;
+}
+
+.mis_compras__list{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    margin-top: 20px;
+}
+
+.mis_compras__item{
+    font-size: 14px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px;
+    height: 40px;
+    overflow: hidden;
+}
+
+.mis_compras__div{
+    width: 25%;
+}
+
+
+
+.mis_compras__item-active{
+    background-color: #dddddd;
+    height: auto;
+    overflow:visible;
+    margin: 2px;
+    border-radius: 5px;
+}
+
+.mis_compras__item_articulo{
+    display: flex;
+    flex-direction: column;
+}
+
+#lista_compras__vacio{
+    text-align: center;
+    margin: 30px;
+}
+
+.heading{
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+}
 
 footer {
     border-top: 1px solid #c9c9c9;

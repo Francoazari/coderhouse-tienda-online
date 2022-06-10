@@ -1,13 +1,17 @@
 {
     "menu": [
         {
-            "id": 0,
+            "id": 1,
             "label": "Articulos",
             "default": true
         },
         {
-            "id": 1,
+            "id": 2,
             "label": "Carrito de compras"
+        },
+        {
+            "id": 3,
+            "label": "Mis pedidos"
         }
     ],
     "articulos": [
