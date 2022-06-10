@@ -23,7 +23,7 @@ window.onload = function () {
             mostrarProductos();
             
         })
-        .catch((error) => {
+        .catch(() => {
             swal(
                 "¡Lo sentimos! Ha ocurrido un error. Por favor contactese con el administrador para más información.",
                 {
@@ -36,19 +36,19 @@ window.onload = function () {
         });
 };
 
-function agregarClase(className, section) {
+function agregarClase(className, section) { //funcion abstracta para agregar clases a un elemento 
     if (!section.classList.contains(className)) {
         section.classList.add(className);
     }
 }
 
-function eliminarClase(className, section) {
+function eliminarClase(className, section) { //funcion abstracta para eliminar clases a un elemento 
     if (section.classList.contains(className)) {
         section.classList.remove(className);
     }
 }
 
-function toggleClase(className, section){
+function toggleClase(className, section){ //funcion abstracta para agregar o eliminar clases a un elemento segun corresponda
     if (section.classList.contains(className)) {
         section.classList.remove(className);
     } else {
@@ -59,7 +59,7 @@ function toggleClase(className, section){
 function actulizarSearchInput() {
     const inputSearch = document.getElementById("nav__search");
 
-    if (localStorage.getItem("wordToSearch")) {
+    if (localStorage.getItem("wordToSearch")) { //guarda la palabra en el localstorage
         inputSearch.value = localStorage.getItem("wordToSearch");
     }
     return;
@@ -105,15 +105,13 @@ function mostrarMisCompras() {
 
     if(misComprasData){
 
-        const divVacio = document.getElementById("lista_compras__vacio");
+        const divVacio = document.getElementById("lista_compras__vacio"); //Oculta div "No se han realizado compras aún."
         agregarClase("hidden", divVacio);
 
         listaComprasSection.innerHTML = '';
         
         const misComprasList = document.createElement("div");
         agregarClase("mis_compras__list", misComprasList);
-
-        
 
         for (compra of misComprasData) {
             const misComprasItem = document.createElement("div");
@@ -188,7 +186,7 @@ function getCarritoFromLocalStorage() {
     }
 }
 
-function validarArticulo(articulo) {
+function validarArticulo(articulo) { //Valida que los articulos tengan los datos obligatorios
     if (articulo.id == undefined) return false;
     if (articulo.nombre == undefined) return false;
     if (articulo.precio == undefined) return false;
@@ -196,10 +194,10 @@ function validarArticulo(articulo) {
     return true;
 }
 
-function mostrarProductos(articulos = articulosJson, soloDisponibles = true) {
+function mostrarProductos(articulos = articulosJson) {
     let wordToSearch;
 
-    if (localStorage.getItem("wordToSearch")) {
+    if (localStorage.getItem("wordToSearch")) { //Busca la palabra ingresada por el usuario en localstorage
         wordToSearch = localStorage.getItem("wordToSearch");
         articulos = articulos.filter((articulo) =>
             articulo.nombre.toLowerCase().includes(wordToSearch.toLowerCase())
@@ -209,7 +207,7 @@ function mostrarProductos(articulos = articulosJson, soloDisponibles = true) {
     const mainShop = document.getElementById("main_shop__articles");
     mainShop.innerHTML = "";
 
-    if (wordToSearch) {
+    if (wordToSearch) { //Si hay una palabra ingresada por el usuario
         const divWordToSearch = document.createElement("div");
         divWordToSearch.classList.add("word-to-search");
 
@@ -219,8 +217,7 @@ function mostrarProductos(articulos = articulosJson, soloDisponibles = true) {
         divBoldWordToSearch.classList.add("word-to-search-bold");
         divBoldWordToSearch.innerHTML = wordToSearch;
 
-        spanWordToSearch.innerHTML =
-            'Resultados para "' + divBoldWordToSearch.outerHTML + '"';
+        spanWordToSearch.innerHTML = 'Resultados para "' + divBoldWordToSearch.outerHTML + '"';
         divWordToSearch.appendChild(spanWordToSearch);
         mainShop.appendChild(divWordToSearch);
     }
@@ -272,8 +269,7 @@ function mostrarProductos(articulos = articulosJson, soloDisponibles = true) {
             const articleButton = document.createElement("button");
 
             if (articulo.stock > 0 && !isArticleInCart(articulo.id)) {
-                articleButton.innerHTML =
-                    '<i class="fa-solid fa-cart-shopping"></i> AGREGAR AL CARRITO';
+                articleButton.innerHTML = '<i class="fa-solid fa-cart-shopping"></i> AGREGAR AL CARRITO';
             } else if (articulo.stock > 0 && isArticleInCart(articulo.id)) {
                 divContainerStock = document.createElement("div");
                 divContainerStock.classList.add("div-container");
@@ -281,21 +277,16 @@ function mostrarProductos(articulos = articulosJson, soloDisponibles = true) {
                 botonMenos = document.createElement("div");
                 botonMenos.classList.add("menos");
                 botonMenos.innerHTML = "-";
-                botonMenos.addEventListener("click", () =>
-                    eliminarArticuloCarrito(articulo.id, 1)
-                );
+                botonMenos.addEventListener("click", () => eliminarArticuloCarrito(articulo.id, 1));
 
                 divCantidad = document.createElement("div");
                 divCantidad.classList.add("cantidadArticulos");
-                divCantidad.innerHTML =
-                    getCantidadArticulosEnCarrito(articulo.id) ?? 0;
+                divCantidad.innerHTML = getCantidadArticulosEnCarrito(articulo.id) ?? 0;
 
                 botonMas = document.createElement("div");
                 botonMas.classList.add("mas");
                 botonMas.innerHTML = "+";
-                botonMas.addEventListener("click", () =>
-                    agregarAlCarrito(articulo.id)
-                );
+                botonMas.addEventListener("click", () => agregarAlCarrito(articulo.id));
 
                 divContainerStock.appendChild(botonMenos);
                 divContainerStock.appendChild(divCantidad);
@@ -308,9 +299,7 @@ function mostrarProductos(articulos = articulosJson, soloDisponibles = true) {
             articleButton.classList.add("article__button");
             if (articulo.stock > 0 && !isArticleInCart(articulo.id)) {
                 articleButton.classList.add("con-stock");
-                articleButton.addEventListener("click", () =>
-                    agregarAlCarrito(articulo.id)
-                );
+                articleButton.addEventListener("click", () => agregarAlCarrito(articulo.id));
             } else if (articulo.stock === 0) {
                 articleButton.classList.add("sin-stock");
             }
@@ -329,9 +318,7 @@ function mostrarProductos(articulos = articulosJson, soloDisponibles = true) {
                 articleInCartP.innerHTML = "IN CART";
                 const iconTrash = document.createElement("i");
                 iconTrash.classList.add("fa-solid", "fa-trash");
-                iconTrash.addEventListener("click", () =>
-                    eliminarArticuloCarrito(articulo.id)
-                );
+                iconTrash.addEventListener("click", () => eliminarArticuloCarrito(articulo.id));
 
                 divContainerInCart.appendChild(articleInCartP);
                 divContainerInCart.appendChild(iconTrash);
@@ -354,7 +341,7 @@ function mostrarProductos(articulos = articulosJson, soloDisponibles = true) {
     mainShop.appendChild(articleContainer);
 }
 
-function validarMenu(menuItem) {
+function validarMenu(menuItem) { //valida que los datos del menu tenga lo importante para mostrarlo
     if (!menuItem.id) return false;
     if (!menuItem.label) return false;
     return true;
@@ -378,9 +365,7 @@ function mostrarMenu(menuItems) {
                     liMenu.classList.add("active");
                 }
                 liMenu.innerHTML = menuItem.label;
-                liMenu.addEventListener("click", () =>
-                    menuOptions(liMenu.getAttribute("id"))
-                );
+                liMenu.addEventListener("click", () => menuOptions(liMenu.getAttribute("id")));
                 ulMenu.appendChild(liMenu);
             })();
         }
@@ -404,9 +389,7 @@ function actualizarStock(articulos) {
 
     if (!articulos) return;
     for (articulo of articulos) {
-        const articuloCarritoEncontrado = carritoDeCompras.find(
-            (articuloCarrito) => articuloCarrito.id === articulo.id
-        );
+        const articuloCarritoEncontrado = carritoDeCompras.find((articuloCarrito) => articuloCarrito.id === articulo.id);
         if (!articuloCarritoEncontrado) continue;
         articulo.stock -= articuloCarritoEncontrado.cantidad;
     }
@@ -418,17 +401,13 @@ function isArticleInCart(idArticle) {
 }
 
 function agregarAlCarrito(idArticulo) {
-    let articuloElegido = articulosJson.find(
-        (articulo) => articulo.id === idArticulo
-    ); //chequea que el articulo exista en el inventario
+    let articuloElegido = articulosJson.find((articulo) => articulo.id === idArticulo); //chequea que el articulo exista en el inventario
 
     if (articuloElegido) {
         if (articuloElegido.stock > 0) {
             //comprueba stock disponible
 
-            let articuloEnCarrito = carritoDeCompras.find(
-                (articulo) => articulo.id === articuloElegido.id
-            ); //busca si el articulo ya fue agregado al carrito
+            let articuloEnCarrito = carritoDeCompras.find((articulo) => articulo.id === articuloElegido.id); //busca si el articulo ya fue agregado al carrito
             articuloElegido.stock -= 1; //resta unidad en el articulo del inventario
 
             if (articuloEnCarrito) {
@@ -536,9 +515,7 @@ function mostrarCarrito() {
     let cargarDatosSection = document.getElementById("cargar-datos-section"); //se oculta la carga de datos
     agregarClase("hidden", cargarDatosSection);
 
-    let confirmarDatosSection = document.getElementById(
-        "confirmar-datos-section"
-    ); //Se oculta la confirmacion de datos
+    let confirmarDatosSection = document.getElementById("confirmar-datos-section"); //Se oculta la confirmacion de datos
     agregarClase("hidden", confirmarDatosSection);
 
     let articulos = document.getElementById("main_shop__articles"); //se oculta la seccion de articulos
@@ -571,12 +548,8 @@ function eliminarArticuloCarrito(idArticulo, cantidad = 0) {
         articulo.stock += cantidad;
     } else {
         articulo.stock += articuloCarrito.cantidad; //busca articulo en inventario y suma stock
-        carritoDeCompras.splice(
-            carritoDeCompras.findIndex(
-                (articulo) => articulo.id === idArticulo
-            ),
-            1
-        ); //elimina el articulo del array
+        carritoDeCompras.splice(carritoDeCompras.findIndex((articulo) => articulo.id === idArticulo),1); //elimina el articulo del array
+
         Toastify({
             text: `Articulo eliminado del carrito`,
             duration: 1500,
@@ -612,9 +585,7 @@ function carrito() {
     if (carritoDeCompras.length > 0) {
         //si existe un elemento en el carrito
 
-        const carritoVacio = document.getElementById(
-            "carrito__articulos_vacio"
-        );
+        const carritoVacio = document.getElementById("carrito__articulos_vacio");
         agregarClase("hidden", carritoVacio); //se oculta el div de carrito vacio
 
         carritoArticulos.innerHTML = "";
@@ -645,11 +616,8 @@ function carrito() {
 
             //precio unitario
             const carritoArticuloPrecioUnitario = document.createElement("div");
-            carritoArticuloPrecioUnitario.classList.add(
-                "carrito__articulo_precio_unitario"
-            );
-            carritoArticuloPrecioUnitario.innerHTML =
-                "$" + articulo.precioPorUnidad;
+            carritoArticuloPrecioUnitario.classList.add("carrito__articulo_precio_unitario");
+            carritoArticuloPrecioUnitario.innerHTML = "$" + articulo.precioPorUnidad;
 
             //subtotal
             const carritoArticuloSubtotal = document.createElement("div");
@@ -659,11 +627,8 @@ function carrito() {
             //eliminar
             const carritoArticuloEliminar = document.createElement("div");
             carritoArticuloEliminar.classList.add("carrito__articulo_eliminar");
-            carritoArticuloEliminar.innerHTML =
-                '<i class="fa-solid fa-trash"></i>';
-            carritoArticuloEliminar.addEventListener("click", () =>
-                eliminarArticuloCarrito(articulo.id)
-            );
+            carritoArticuloEliminar.innerHTML = '<i class="fa-solid fa-trash"></i>';
+            carritoArticuloEliminar.addEventListener("click", () => eliminarArticuloCarrito(articulo.id));
 
             carritoArticulo.appendChild(carritoArticuloImage);
             carritoArticulo.appendChild(carritoArticuloNombre);
@@ -679,9 +644,7 @@ function carrito() {
 
         carritoArticulos.innerHTML = "";
 
-        const carritoVacio = document.getElementById(
-            "carrito__articulos_vacio"
-        );
+        const carritoVacio = document.getElementById("carrito__articulos_vacio");
         eliminarClase("hidden", carritoVacio);
     }
 
@@ -689,18 +652,12 @@ function carrito() {
         "carrito__cantidad_articulos_cantidad"
     );
     let cantidadCont = 0;
-    cantidadCont = carritoDeCompras.reduce(
-        (cantidadCont, articulo) => cantidadCont + articulo.cantidad,
-        cantidadCont
-    ); //se calcula la cantidad de articulos en el carrito
+    cantidadCont = carritoDeCompras.reduce((cantidadCont, articulo) => cantidadCont + articulo.cantidad, cantidadCont); //se calcula la cantidad de articulos en el carrito
     cantidadDeArticulos.innerHTML = cantidadCont; //se muestra la cantidad
 
     let total = document.getElementById("carrito__total_numero");
     let totalAcum = 0;
-    totalAcum = carritoDeCompras.reduce(
-        (totalAcum, articulo) => totalAcum + articulo.subtotal,
-        totalAcum
-    ); //Suma de todo el carrito
+    totalAcum = carritoDeCompras.reduce((totalAcum, articulo) => totalAcum + articulo.subtotal, totalAcum); //Suma de todo el carrito
     total.innerHTML = "$" + totalAcum; //Muestra el total de lo que esta en el carrito
 
     let pagarButton = document.getElementsByClassName("carrito__pagar");
@@ -749,8 +706,7 @@ function validarDatos(inputs) {
 function confirmarDatos(e) {
     e.preventDefault(); //Evitar enviar y recargar la apgina
 
-    const datosInvalidosMessage =
-        document.getElementsByClassName("datos-invalidos");
+    const datosInvalidosMessage = document.getElementsByClassName("datos-invalidos");
 
     //Si los datos ingresados en el formulario son validos
     if (validarDatos(document.getElementById("form-pago").elements)) {
@@ -762,16 +718,12 @@ function confirmarDatos(e) {
         eliminarClase("mostrar-seccion", carritoSection);
 
         //Oculta la carga de datos
-        const cargarDatosSection = document.getElementById(
-            "cargar-datos-section"
-        );
+        const cargarDatosSection = document.getElementById("cargar-datos-section");
         agregarClase("hidden", cargarDatosSection);
         eliminarClase("mostrar-seccion", cargarDatosSection);
 
         //Muestra la seccion de confirmacion de datos
-        const confirmarDatosSection = document.getElementById(
-            "confirmar-datos-section"
-        );
+        const confirmarDatosSection = document.getElementById("confirmar-datos-section");
         eliminarClase("hidden", confirmarDatosSection);
         agregarClase("mostrar-seccion", confirmarDatosSection);
 
@@ -779,35 +731,25 @@ function confirmarDatos(e) {
         const formPago = document.getElementById("form-pago").elements;
         var dataUsuarioPago = {};
         for (var i = 0; i < formPago.length; i++)
-            if (formPago[i].type != "submit")
-                dataUsuarioPago[formPago[i].name] = formPago[i].value;
+            if (formPago[i].type != "submit") dataUsuarioPago[formPago[i].name] = formPago[i].value;
 
         localStorage.setItem("datos_usuario", dataUsuarioPago);
 
         //Completa los datos de la seccion de confirmacion con los datos del form
         const confirmarNombre = document.getElementById("confirmar-nombre");
         confirmarNombre.innerHTML = `${dataUsuarioPago.nombre} ${dataUsuarioPago.apellido}`;
-        const confirmarDireccion = document.getElementById(
-            "confirmar-direccion"
-        );
+        const confirmarDireccion = document.getElementById("confirmar-direccion");
         confirmarDireccion.innerHTML = `${dataUsuarioPago.direccion} ${dataUsuarioPago.piso} ${dataUsuarioPago.depto}`;
-        const confirmarNroTarjeta =
-            document.getElementById("confirmar-tarjeta");
+        const confirmarNroTarjeta = document.getElementById("confirmar-tarjeta");
         confirmarNroTarjeta.innerHTML = `${dataUsuarioPago.tarjeta_nro}`;
-        const confirmarVencimiento = document.getElementById(
-            "confirmar-fecha-venc"
-        );
+        const confirmarVencimiento = document.getElementById("confirmar-fecha-venc");
         confirmarVencimiento.innerHTML = `${dataUsuarioPago.tarjeta_vencimiento}`;
         const confirmarTotal = document.getElementById("confirmar-total");
         let totalAcum = 0;
-        totalAcum = carritoDeCompras.reduce(
-            (totalAcum, articulo) => totalAcum + articulo.subtotal,
-            totalAcum
-        );
+        totalAcum = carritoDeCompras.reduce((totalAcum, articulo) => totalAcum + articulo.subtotal, totalAcum);
         confirmarTotal.innerHTML = "$" + totalAcum;
 
-        const buttomConfirmar =
-            document.getElementsByClassName("button_confirmar");
+        const buttomConfirmar = document.getElementsByClassName("button_confirmar");
         buttomConfirmar[0].addEventListener("click", () => confirmarCompra());
 
         const buttomVolver = document.getElementsByClassName("button_volver");
@@ -820,9 +762,7 @@ function confirmarDatos(e) {
 
 function volverCargaDatos() {
     //Vuelve a la carga de datos
-    const confirmarDatosSection = document.getElementById(
-        "confirmar-datos-section"
-    );
+    const confirmarDatosSection = document.getElementById("confirmar-datos-section");
     agregarClase("hidden", confirmarDatosSection);
 
     mostrarCarrito();
@@ -835,9 +775,7 @@ function volverCargaDatos() {
 function confirmarCompra() {
     
     //Confirma compra y muestra un alert
-    swal("¡Gracias por tu compra!", "Compra realizada con éxito", "success", {
-        button: false,
-    })
+    swal("¡Gracias por tu compra!", "Compra realizada con éxito", "success", {button: false})
         .then(() => {
 
             misCompras = JSON.parse(localStorage.getItem("mis-compras"));
